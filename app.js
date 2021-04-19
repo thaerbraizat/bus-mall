@@ -96,14 +96,21 @@ function handleClicking(event) {
         renderImages();
 
     } else {
-        renderList()
+        // renderList()
         leftImageElement.removeEventListener('click', handleClicking);
         midImageElement.removeEventListener('click', handleClicking);
         rightImageElement.removeEventListener('click', handleClicking);
 
     }
-}
+};
 
+let button=document.getElementById("btnn");
+button.addEventListener('click', shhowList);
+
+function shhowList(){
+    renderList();
+    button.removeEventListener('click',shhowList);
+ };
 
 
 function renderList() {
