@@ -36,3 +36,9 @@ li{
     list-style: none;
     color: black;
 }
+button{
+    border: black;
+    padding: 30px;
+    background-color: blue;
+    color: black;
+}
