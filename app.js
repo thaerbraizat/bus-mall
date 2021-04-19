@@ -5,7 +5,7 @@ function genrateRandomIndex() {
 
 
 }
-let arryImage = ["boots", "breakfast", "bubblegum", "chair", "cthulhu", "dog-duck", "dragon", "pen", "pet-sweep", "scissors", "shark","sweep", "tauntaun", "unicorn","usb", "water-can", "wine-glass"];
+let arryImage = ["boots", "breakfast", "bubblegum", "chair", "cthulhu", "dog-duck", "dragon", "pen", "pet-sweep", "scissors", "shark", "sweep", "tauntaun", "unicorn", "usb", "water-can", "wine-glass"];
 
 let leftImageElement = document.getElementById('left-image');
 let midImageElement = document.getElementById('mid-image');
@@ -18,6 +18,8 @@ let maxAttempts = 25;
 let leftIndex;
 let midIndex;
 let rightIndex;
+let testArry = [];
+
 
 function Buss(name, source) {
     this.name = name;
@@ -30,26 +32,28 @@ function Buss(name, source) {
 
 Buss.allImages = [];
 for (let i = 0; i < arryImage.length; i++) {
-    if(arryImage[i]=== "usb"){
+    if (arryImage[i] === "usb") {
         new Buss(arryImage[i], `../images/${arryImage[i]}.gif`);
-    }else if(arryImage[i]=== "sweep"){
+    } else if (arryImage[i] === "sweep") {
         new Buss(arryImage[i], `../images/${arryImage[i]}.png`);
-    }else
-    new Buss(arryImage[i], `../images/${arryImage[i]}.jpg`);
+    } else
+        new Buss(arryImage[i], `../images/${arryImage[i]}.jpg`);
 
 }
 
 
 
-console.log(Buss.allImages);
+
 
 function renderImages() {
+    
+    let oldIndexes = [leftIndex, rightIndex, midIndex];
+
     leftIndex = genrateRandomIndex();
     midIndex = genrateRandomIndex();
-    // console.log(Buss.allImages[midIndex]);
     rightIndex = genrateRandomIndex();
 
-    while (leftIndex===rightIndex || rightIndex===midIndex||leftIndex===midIndex) {
+    while ((leftIndex === rightIndex || rightIndex === midIndex || leftIndex === midIndex)|| (oldIndexes.includes(leftIndex) || oldIndexes.includes(rightIndex) || oldIndexes.includes(midIndex))){
         leftIndex = genrateRandomIndex();
         midIndex = genrateRandomIndex();
         rightIndex = genrateRandomIndex();
@@ -58,6 +62,7 @@ function renderImages() {
 
     leftImageElement.src = Buss.allImages[leftIndex].source;
     Buss.allImages[leftIndex].show++;
+    // console.log(Buss.allImages[leftIndex].name);
     midImageElement.src = Buss.allImages[midIndex].source;
     Buss.allImages[midIndex].show++;
     rightImageElement.src = Buss.allImages[rightIndex].source;
@@ -67,6 +72,7 @@ function renderImages() {
 
 
 renderImages();
+console.log(testArry);
 // function track(){
 //     for (let i = 0; i < this.allImages.length; i++) {
 
@@ -96,7 +102,10 @@ function handleClicking(event) {
         renderImages();
 
     } else {
-        // renderList()
+
+
+        renderList()
+        chart();
         leftImageElement.removeEventListener('click', handleClicking);
         midImageElement.removeEventListener('click', handleClicking);
         rightImageElement.removeEventListener('click', handleClicking);
@@ -104,21 +113,49 @@ function handleClicking(event) {
     }
 };
 
-let button=document.getElementById("btnn");
-button.addEventListener('click', shhowList);
+// let button=document.getElementById("btnn");
+// button.addEventListener('click', shhowList);
 
-function shhowList(){
-    renderList();
-    button.removeEventListener('click',shhowList);
- };
+// function shhowList(){
+//     renderList();
+//     button.removeEventListener('click',shhowList);
+//  };
 
-
+let arrOfVotes = [];
+let arrOfShown = [];
 function renderList() {
-    let ul = document.getElementById('unList');
+    // let ul = document.getElementById('unList');
     for (let i = 0; i < Buss.allImages.length; i++) {
-        let li = document.createElement('li');
-        ul.appendChild(li);
-        li.textContent = `${Buss.allImages[i].name} it has ${Buss.allImages[i].votes} Votes and it has shown ${Buss.allImages[i].show}`;
+        arrOfVotes.push(Buss.allImages[i].votes);
+        arrOfShown.push(Buss.allImages[i].show);
+        // let li = document.createElement('li');
+        // ul.appendChild(li);
+        // li.textContent = `${Buss.allImages[i].name} it has ${Buss.allImages[i].votes} Votes and it has shown ${Buss.allImages[i].show}`;
     }
 }
+function chart() {
+    let ctx = document.getElementById('myChart');
+    let myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: arryImage,
+            datasets: [{
+                label: 'Number Of votes',
+                data: arrOfVotes,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                ],
+                borderWidth: 1
+            }, {
+                label: 'Number of Shown',
+                data: arrOfShown,
+                backgroundColor: [
+                    "rgb(51, 153, 255)"
+                ],
+                borderWidth: 1
+            }]
+        }
+    })
+}
+
 
