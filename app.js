@@ -27,7 +27,9 @@ function Buss(name, source) {
     this.show = 0;
     this.votes = 0;
     Buss.allImages.push(this);
+   
 }
+
 
 
 Buss.allImages = [];
@@ -41,19 +43,37 @@ for (let i = 0; i < arryImage.length; i++) {
 
 }
 
+function saveToLs(){
+    let arrSlist = JSON.stringify(Buss.allImages);
+  console.log(arrSlist);
+    localStorage.setItem('buss', arrSlist);
+    
+  }
 
-
-
+  function gettingVotesFromLs(){
+    let data = localStorage.getItem('buss');
+    // let track = JSON.parse(data);
+    if(data !== null){
+        let track = JSON.parse(data);
+      Buss.allImages= track;
+      console.log(track);
+      
+    }
+  
+    // renderImages();
+  
+  }
+  
 
 function renderImages() {
-    
+
     let oldIndexes = [leftIndex, rightIndex, midIndex];
 
     leftIndex = genrateRandomIndex();
     midIndex = genrateRandomIndex();
     rightIndex = genrateRandomIndex();
 
-    while ((leftIndex === rightIndex || rightIndex === midIndex || leftIndex === midIndex)|| (oldIndexes.includes(leftIndex) || oldIndexes.includes(rightIndex) || oldIndexes.includes(midIndex))){
+    while ((leftIndex === rightIndex || rightIndex === midIndex || leftIndex === midIndex) || (oldIndexes.includes(leftIndex) || oldIndexes.includes(rightIndex) || oldIndexes.includes(midIndex))) {
         leftIndex = genrateRandomIndex();
         midIndex = genrateRandomIndex();
         rightIndex = genrateRandomIndex();
@@ -67,17 +87,11 @@ function renderImages() {
     Buss.allImages[midIndex].show++;
     rightImageElement.src = Buss.allImages[rightIndex].source;
     Buss.allImages[rightIndex].show++;
-
+   
 }
 
 
 renderImages();
-console.log(testArry);
-// function track(){
-//     for (let i = 0; i < this.allImages.length; i++) {
-
-
-//     }
 
 
 
@@ -99,40 +113,46 @@ function handleClicking(event) {
         } else if (event.target.id === 'right-image') {
             Buss.allImages[rightIndex].votes++;
         }
+        saveToLs();
         renderImages();
+        
 
     } else {
 
-
+      
         renderList()
         chart();
+       
         leftImageElement.removeEventListener('click', handleClicking);
         midImageElement.removeEventListener('click', handleClicking);
         rightImageElement.removeEventListener('click', handleClicking);
 
     }
+}
+
+let button = document.getElementById("btnn");
+button.addEventListener('click', shhowList);
+function shhowList() {
+    renderList();
+    button.removeEventListener('click', shhowList);
 };
-
-// let button=document.getElementById("btnn");
-// button.addEventListener('click', shhowList);
-
-// function shhowList(){
-//     renderList();
-//     button.removeEventListener('click',shhowList);
-//  };
 
 let arrOfVotes = [];
 let arrOfShown = [];
 function renderList() {
-    // let ul = document.getElementById('unList');
+    let ul = document.getElementById('unList');
+    ul.innerText="";
     for (let i = 0; i < Buss.allImages.length; i++) {
         arrOfVotes.push(Buss.allImages[i].votes);
         arrOfShown.push(Buss.allImages[i].show);
-        // let li = document.createElement('li');
-        // ul.appendChild(li);
-        // li.textContent = `${Buss.allImages[i].name} it has ${Buss.allImages[i].votes} Votes and it has shown ${Buss.allImages[i].show}`;
+        let li = document.createElement('li');
+        ul.appendChild(li);
+        li.textContent = `${Buss.allImages[i].name} it has ${Buss.allImages[i].votes} Votes and it has shown ${Buss.allImages[i].show}`;
     }
+  
 }
+gettingVotesFromLs();
+
 function chart() {
     let ctx = document.getElementById('myChart');
     let myChart = new Chart(ctx, {

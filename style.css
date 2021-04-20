@@ -37,8 +37,9 @@ li{
     color: black;
 }
 button{
-    border: black;
+    border: rgb(3, 3, 3);
     padding: 30px;
-    background-color: blue;
+    background-color: rgb(26, 65, 26);
     color: black;
+    font-weight: bolder;
 }
